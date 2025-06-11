@@ -1,4 +1,33 @@
 {
   "name": "frontend",
-  "displayName": "frontend"
+  "displayName": "frontend",
+  "expo": {
+    "name": "temperament",
+    "slug": "temperament",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.temperament.app"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.temperament.app"
+    },
+    "web": {
+      "favicon": "favicon.png"
+    },
+    "plugins": ["expo-image-picker"]
+  }
 }
