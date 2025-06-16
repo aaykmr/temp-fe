@@ -9,15 +9,19 @@ import {
   Alert,
 } from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
-import {RootState} from '../../store';
-import {findMatch, getCurrentMatch} from '../../store/slices/matchSlice';
+import {RootState, AppDispatch} from '../../store';
+import {
+  findMatch,
+  getCurrentMatch,
+  extendMatch,
+} from '../../store/slices/matchSlice';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 export default function MatchesScreen() {
   const {currentMatch, loading} = useSelector(
     (state: RootState) => state.match,
   );
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     if (!currentMatch) {

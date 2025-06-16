@@ -1,11 +1,12 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   Switch,
-  Alert,
+  Modal,
+  Pressable,
 } from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import {RootState} from '../../store';
@@ -15,25 +16,47 @@ import Icon from 'react-native-vector-icons/Ionicons';
 export default function SettingsScreen() {
   const dispatch = useDispatch();
   const {user} = useSelector((state: RootState) => state.auth);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const handleLogout = () => {
-    Alert.alert(
-      'Logout',
-      'Are you sure you want to logout?',
-      [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-        },
-        {
-          text: 'Logout',
-          style: 'destructive',
-          onPress: () => dispatch(logout()),
-        },
-      ],
-      {cancelable: true},
-    );
+    setShowLogoutModal(true);
   };
+
+  const confirmLogout = () => {
+    dispatch(logout());
+    setShowLogoutModal(false);
+  };
+
+  const renderLogoutModal = () => (
+    <Modal
+      animationType="fade"
+      transparent={true}
+      visible={showLogoutModal}
+      onRequestClose={() => setShowLogoutModal(false)}>
+      <Pressable
+        style={styles.modalOverlay}
+        onPress={() => setShowLogoutModal(false)}>
+        <View style={styles.modalContent}>
+          <Text style={styles.modalTitle}>Logout</Text>
+          <Text style={styles.modalMessage}>
+            Are you sure you want to logout?
+          </Text>
+          <View style={styles.modalButtons}>
+            <TouchableOpacity
+              style={[styles.modalButton, styles.cancelButton]}
+              onPress={() => setShowLogoutModal(false)}>
+              <Text style={styles.cancelButtonText}>Cancel</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.modalButton, styles.modalLogoutButton]}
+              onPress={confirmLogout}>
+              <Text style={styles.logoutButtonText}>Logout</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Pressable>
+    </Modal>
+  );
 
   const renderSettingItem = (
     icon: string,
@@ -68,6 +91,7 @@ export default function SettingsScreen() {
 
   return (
     <View style={styles.container}>
+      {renderLogoutModal()}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Account</Text>
         {renderSettingItem('person', 'Edit Profile', undefined, () => {})}
@@ -187,5 +211,58 @@ const styles = StyleSheet.create({
     color: '#FF4B6E',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    borderRadius: 12,
+    padding: 20,
+    width: '80%',
+    maxWidth: 400,
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  modalMessage: {
+    fontSize: 16,
+    color: '#666',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  modalButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  modalButton: {
+    flex: 1,
+    padding: 12,
+    borderRadius: 8,
+    marginHorizontal: 5,
+  },
+  cancelButton: {
+    backgroundColor: '#f0f0f0',
+  },
+  modalLogoutButton: {
+    backgroundColor: '#FF4B6E',
+  },
+  cancelButtonText: {
+    color: '#666',
+    textAlign: 'center',
+    fontSize: 16,
+    fontWeight: '500',
+  },
+  logoutButtonText: {
+    color: 'white',
+    textAlign: 'center',
+    fontSize: 16,
+    fontWeight: '500',
   },
 });

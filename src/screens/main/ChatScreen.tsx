@@ -10,14 +10,14 @@ import {
   Platform,
 } from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
-import {RootState} from '../../store';
+import {RootState, AppDispatch} from '../../store';
 import {getMessages, sendMessage} from '../../store/slices/chatSlice';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 export default function ChatScreen() {
   const {currentMatch} = useSelector((state: RootState) => state.match);
   const {messages, loading} = useSelector((state: RootState) => state.chat);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const [message, setMessage] = useState('');
   const flatListRef = useRef<FlatList>(null);
 

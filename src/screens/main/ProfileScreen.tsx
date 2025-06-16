@@ -14,12 +14,16 @@ import {RootState, AppDispatch} from '../../store';
 import {updateProfile, getProfile} from '../../store/slices/authSlice';
 import {userService} from '../../services/userService';
 import Icon from 'react-native-vector-icons/Ionicons';
+import MultiSlider from '@ptomasroos/react-native-multi-slider';
+import Slider from '@react-native-community/slider';
 
 export default function ProfileScreen() {
   const {user} = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch<AppDispatch>();
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [ageRange, setAgeRange] = useState([18, 30]);
+  const [distance, setDistance] = useState(10);
 
   useEffect(() => {
     if (user?.id) {
@@ -96,16 +100,36 @@ export default function ProfileScreen() {
         <View style={styles.preferenceItem}>
           <Text style={styles.preferenceLabel}>Age Range</Text>
           <Text style={styles.preferenceValue}>
-            {user?.preferences?.minAge || '18'} -{' '}
-            {user?.preferences?.maxAge || '99'}
+            {ageRange[0]} - {ageRange[1]}
           </Text>
         </View>
+        <MultiSlider
+          values={ageRange}
+          min={18}
+          max={70}
+          onValuesChange={setAgeRange}
+          step={1}
+          allowOverlap={false}
+          markerStyle={styles.sliderPointer}
+          selectedStyle={styles.sliderSelected}
+          unselectedStyle={styles.sliderUnselected}
+          containerStyle={styles.slidercontainer}
+          trackStyle={styles.sliderTrack}
+          snapped
+        />
         <View style={styles.preferenceItem}>
           <Text style={styles.preferenceLabel}>Distance</Text>
-          <Text style={styles.preferenceValue}>
-            {user?.preferences?.radius || '50'} km
-          </Text>
+          <Text style={styles.preferenceValue}>{distance} km</Text>
         </View>
+
+        <Slider
+          minimumValue={1}
+          maximumValue={100}
+          step={1}
+          value={distance}
+          onValueChange={setDistance}
+          style={{width: 215, height: 40}}
+        />
       </View>
 
       <TouchableOpacity
@@ -224,5 +248,32 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  sliderPointer: {
+    backgroundColor: 'rgb(0, 150, 136)',
+    borderColor: 'rgb(0, 150, 136)',
+    boxShadow: 'none',
+    marginTop: 2,
+    width: 20,
+    height: 20,
+  },
+  sliderSelected: {
+    backgroundColor: 'rgb(0, 150, 136)',
+    borderColor: 'rgb(0, 150, 136)',
+    boxShadow: 'none',
+    height: 4,
+  },
+  sliderUnselected: {
+    backgroundColor: 'rgb(147, 147, 147)',
+    borderColor: 'rgb(147, 147, 147)',
+    boxShadow: 'none',
+    height: 4,
+  },
+  slidercontainer: {
+    marginLeft: 5,
+    width: 200,
+  },
+  sliderTrack: {
+    width: 200,
   },
 });
